@@ -1,0 +1,37 @@
+{
+  "name": "memestick",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build",
+    "check": "node scripts/check.mjs",
+    "packs": "python3 scripts/fetch_packs.py"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.11",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.1.11",
+    "vite": "^6.0.7"
+  },
+  "description": "Browser extension that puts a sticker picker in every text field. Built for Microsoft Teams.",
+  "license": "MIT",
+  "keywords": [
+    "chrome-extension",
+    "browser-extension",
+    "manifest-v3",
+    "stickers",
+    "gif",
+    "giphy",
+    "microsoft-teams",
+    "memes",
+    "react",
+    "vite",
+    "tailwindcss"
+  ]
+}

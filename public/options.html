@@ -1,0 +1,25 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>MemeStick</title>
+<style>
+  body { margin: 0; padding: 28px; font: 14px/1.5 system-ui, sans-serif; background: #171717; color: #e5e5e5; }
+  h1 { font-size: 17px; margin: 0 0 4px; }
+  p { color: #a3a3a3; margin: 0 0 18px; }
+  a { color: #818cf8; }
+  input { width: 100%; box-sizing: border-box; padding: 9px 11px; border-radius: 10px;
+          border: 1px solid #333; background: #262626; color: #fff; font: inherit; }
+  button { margin-top: 12px; padding: 9px 16px; border: 0; border-radius: 10px;
+           background: #6366f1; color: #fff; font: inherit; cursor: pointer; }
+  #saved { color: #4ade80; margin-left: 10px; }
+</style>
+<h1>GIPHY API key</h1>
+<p>
+  941 stickers ship with the extension and work offline, so a key is only used
+  for live GIPHY search when nothing bundled matches. One is already built in —
+  paste your own from
+  <a href="https://developers.giphy.com/dashboard/" target="_blank">developers.giphy.com</a>
+  (create an app → API, not SDK) to override it.
+</p>
+<input id="key" type="text" placeholder="your GIPHY API key" autocomplete="off" />
+<div><button id="save">Save</button><span id="saved"></span></div>
+<script src="options.js"></script>
