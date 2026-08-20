@@ -61,6 +61,10 @@ async function imageData(url) {
   }
 }
 
+// The toolbar button has no popup — the picker lives in the page. Make the
+// click do the one useful thing left.
+chrome.action.onClicked.addListener(() => chrome.runtime.openOptionsPage())
+
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (msg?.type === 'image') {
     imageData(msg.url).then(sendResponse)

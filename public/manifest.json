@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "MemeStick",
+  "name": "MemeStick \u2014 Sticker Picker for Teams & Chat",
   "version": "0.1.0",
-  "description": "Drop stickers into any text field.",
+  "description": "Adds a meme sticker picker to any text box. 941 stickers bundled, one click to send. Built for Microsoft Teams.",
   "permissions": [
     "storage",
     "clipboardWrite"
@@ -41,5 +41,20 @@
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "MemeStick \u2014 click a text box to use, or open settings",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   }
 }

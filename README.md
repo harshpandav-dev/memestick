@@ -1,7 +1,9 @@
 # MemeStick
 
-**A sticker picker for every text box on the web — built for Microsoft Teams.**
+**A Chrome extension that puts a meme sticker picker in every text box —
+built for Microsoft Teams.**
 
+![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?logo=googlechrome&logoColor=white)
 ![Manifest V3](https://img.shields.io/badge/Manifest-V3-4285F4)
 ![React](https://img.shields.io/badge/React-18-61DAFB)
 ![Vite](https://img.shields.io/badge/Vite-6-646CFF)
@@ -154,6 +156,7 @@ public/
   manifest.json        MV3 manifest
   background.js        service worker — all network calls + the GIPHY key
   options.html/.js     paste your own GIPHY key
+  icons/               toolbar and store icons
   stickers.json        the pack index (fetched lazily, not bundled into the JS)
   stickers/            941 PNG + 941 GIF
 src/
@@ -169,6 +172,7 @@ src/
                         StickerCategories, StickerGrid, StickerCard
 scripts/
   fetch_packs.py       download/refresh the packs
+  gen_icons.py         regenerate the extension icons
   check.mjs            dataset + search sanity check
 ```
 
