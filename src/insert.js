@@ -1,5 +1,4 @@
 import { send } from './ext'
-import { log, describe } from './log'
 
 /**
  * Teams, Slack, Discord, WhatsApp Web and X don't use plain contenteditable —
@@ -11,14 +10,11 @@ import { log, describe } from './log'
 
 // Bytes come from the service worker: MV3 content scripts lost cross-origin fetch.
 async function fileFrom(url, id) {
-  log('1. asking worker for', url)
   const res = await send({ type: 'image', url })
   if (!res?.dataUrl) {
-    log('1. FAILED, worker said:', res)
     return null
   }
   const blob = await (await fetch(res.dataUrl)).blob()
-  log('1. got', blob.type, blob.size, 'bytes')
   const ext = (blob.type.split('/')[1] || 'png').replace('jpeg', 'jpg')
   return new File([blob], `${id}.${ext}`, { type: blob.type })
 }
@@ -137,11 +133,9 @@ async function submit(el, area, before) {
   const gone = () => imageCount(area) <= before
 
   const button = findSendButton(el)
-  log('4. send button:', button ? button.outerHTML.slice(0, 120) : 'NOT FOUND')
   if (button && !disabled(button)) {
     button.click()
     const sent = await waitFor(gone, 3000)
-    log('4. clicked, sent:', sent)
     if (sent) return true
   }
 
@@ -149,7 +143,6 @@ async function submit(el, area, before) {
   for (let attempt = 0; attempt < 2; attempt++) {
     pressEnter(el)
     const sent = await waitFor(gone, 2000)
-    log(`5. Enter #${attempt + 1}, sent:`, sent)
     if (sent) return true
   }
   return false
@@ -196,10 +189,8 @@ function typeInto(el, text) {
  */
 export async function insertSticker({ el, rangeRef }, sticker, send = true) {
   if (!el.isConnected) {
-    log('target vanished from the page', describe(el))
     return 'Lost the text field — try again'
   }
-  log('0. target', describe(el), 'contentEditable:', el.isContentEditable)
   el.focus()
 
   if (el.isContentEditable) {
@@ -207,7 +198,6 @@ export async function insertSticker({ el, rangeRef }, sticker, send = true) {
     // whole subtree, and re-adding a detached range silently kills the paste.
     const range = rangeRef.current
     const usable = range?.startContainer.isConnected && el.contains(range.commonAncestorContainer)
-    log('0. saved caret usable:', Boolean(usable))
     const sel = document.getSelection()
     sel.removeAllRanges()
     if (usable) {
@@ -223,16 +213,14 @@ export async function insertSticker({ el, rangeRef }, sticker, send = true) {
 
     let copied = false
     const src = sticker.gifUrl || sticker.imageUrl // animated where we have it
-    const file = await fileFrom(src, sticker.id).catch((e) => log('1. threw', e))
+    const file = await fileFrom(src, sticker.id).catch(() => null)
     if (file) {
       const area = composeArea(el)
       const before = imageCount(area)
       const pasted = pasteInto(el, file)
-      log('2. paste accepted:', pasted, '| watching', describe(area), 'images:', before)
       // The app uploads and renders the preview asynchronously — checking the
       // DOM right after dispatch always looks empty.
       const landed = pasted && (await waitFor(() => imageCount(area) > before, 8000))
-      log('3. landed in compose:', landed, '| images now:', imageCount(area))
       if (landed) {
         if (!send) return ''
         return (await submit(el, area, before)) ? '' : 'Inserted — press Enter to send'
@@ -245,14 +233,12 @@ export async function insertSticker({ el, rangeRef }, sticker, send = true) {
       } catch {}
     }
 
-    log('3. clipboard fallback, copied:', copied)
     el.focus()
     document.execCommand(
       'insertHTML',
       false,
       `<img src="${src}" alt="${sticker.name}" width="96" height="96">`
     )
-    log('3. after execCommand, box:', el.innerHTML.slice(0, 200))
     if (el.innerHTML.includes(src)) return '' // survived the editor's re-render
     return copied ? 'Copied — press Ctrl+V' : "This editor didn't accept the sticker"
   }

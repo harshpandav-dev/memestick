@@ -51,14 +51,12 @@ async function giphy(path, params) {
 async function imageData(url) {
   try {
     const res = await fetch(url)
-    console.log('[MemeStick sw]', res.status, res.headers.get('content-type'), url)
     const type = res.headers.get('content-type') || 'image/png'
     const bytes = new Uint8Array(await res.arrayBuffer())
     let bin = ''
     for (const b of bytes) bin += String.fromCharCode(b)
     return { dataUrl: `data:${type};base64,${btoa(bin)}` }
-  } catch (e) {
-    console.log('[MemeStick sw] image fetch threw', url, e)
+  } catch {
     return { error: 'fetch failed' }
   }
 }

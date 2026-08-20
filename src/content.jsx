@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import css from './style.css?inline'
 import { setDeadHandler } from './ext'
-import { log } from './log'
 import { useInputDetector } from './hooks/useInputDetector'
 import { insertSticker } from './insert'
 import { StickerButton } from './components/StickerButton'
@@ -62,9 +61,7 @@ function App() {
           closing={closing}
           onPick={async (sticker, send) => {
             close()
-            log('PICK', sticker.id, sticker.gifUrl || sticker.imageUrl, 'send:', send)
             const message = await insertSticker(target, sticker, send)
-            log('RESULT:', message || 'ok')
             if (!message) return
             setHint(message)
             setTimeout(() => setHint(''), 4000)
@@ -85,7 +82,6 @@ const mount = document.createElement('div')
 shadow.append(style, mount)
 document.documentElement.append(host)
 
-log('loaded', chrome.runtime.getManifest?.().version, 'in', location.href)
 
 const root = createRoot(mount)
 root.render(<App />)

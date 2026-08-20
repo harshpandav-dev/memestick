@@ -195,17 +195,10 @@ npm run check     # verifies every record has its files and search behaves
 **`Extension context invalidated`** — you reloaded the extension while a tab was
 open. Reload the tab.
 
-**Nothing happens when I click a sticker** — turn on the breadcrumbs from the
-page console and reload the tab:
-
-```js
-localStorage.memestick = 'debug'
-```
-
-MemeStick then logs each step with a `[MemeStick]` prefix (`0.` target → `1.`
-bytes → `2.` paste accepted → `3.` landed in compose → `4.` sent). The first
-`false` tells you where it broke. Service worker logs live under
-`chrome://extensions` → MemeStick → **service worker**.
+**Nothing happens when I click a sticker** — check the page console and the
+service worker console (`chrome://extensions` → MemeStick → **service
+worker**) for errors. The insertion path is `src/insert.js`: paste the file →
+wait for it to appear in the compose area → click the app's Send button.
 
 ## Contributing
 
