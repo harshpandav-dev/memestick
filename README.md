@@ -195,11 +195,17 @@ npm run check     # verifies every record has its files and search behaves
 **`Extension context invalidated`** — you reloaded the extension while a tab was
 open. Reload the tab.
 
-**Nothing happens when I click a sticker** — open DevTools; MemeStick logs each
-step with a `[MemeStick]` prefix (`0.` target → `1.` bytes → `2.` paste accepted
-→ `3.` landed → `4.` sent). The first `false` tells you where it broke. Service
-worker logs live under `chrome://extensions` → MemeStick → **service worker**.
-Set `DEBUG = false` in `src/log.js` to silence them.
+**Nothing happens when I click a sticker** — turn on the breadcrumbs from the
+page console and reload the tab:
+
+```js
+localStorage.memestick = 'debug'
+```
+
+MemeStick then logs each step with a `[MemeStick]` prefix (`0.` target → `1.`
+bytes → `2.` paste accepted → `3.` landed in compose → `4.` sent). The first
+`false` tells you where it broke. Service worker logs live under
+`chrome://extensions` → MemeStick → **service worker**.
 
 ## Contributing
 

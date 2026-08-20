@@ -1,4 +1,12 @@
-const DEBUG = true // flip to false to silence the console breadcrumbs
+// Off by default. Turn on from the page console — no rebuild needed:
+//   localStorage.memestick = 'debug'    (then reload the tab)
+const DEBUG = (() => {
+  try {
+    return localStorage.memestick === 'debug'
+  } catch {
+    return false // sandboxed iframes throw on localStorage access
+  }
+})()
 
 export const log = (...args) => DEBUG && console.log('[MemeStick]', ...args)
 
