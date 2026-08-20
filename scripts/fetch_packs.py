@@ -109,6 +109,6 @@ for category, query in CATEGORIES.items():
     stickers += got
     print(f"{category:14} {len(got)}")
 
-with open(os.path.join(ROOT, "public", "stickers.json"), "w") as f:
+with open(os.path.join(ROOT, "stickers.json"), "w") as f:
     json.dump(stickers, f, indent=1)
 print(f"total {len(stickers)}")

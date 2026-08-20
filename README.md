@@ -5,9 +5,8 @@ built for Microsoft Teams.**
 
 ![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?logo=googlechrome&logoColor=white)
 ![Manifest V3](https://img.shields.io/badge/Manifest-V3-4285F4)
-![React](https://img.shields.io/badge/React-18-61DAFB)
-![Vite](https://img.shields.io/badge/Vite-6-646CFF)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38BDF8)
+![No build step](https://img.shields.io/badge/build-none-22C55E)
+![Dependencies](https://img.shields.io/badge/dependencies-0-22C55E)
 ![Offline](https://img.shields.io/badge/941%20stickers-offline-22C55E)
 ![License](https://img.shields.io/badge/license-MIT-black)
 
@@ -18,19 +17,16 @@ Discord, WhatsApp Web, Gmail, X and Reddit too.
 - 🖼️ **941 stickers bundled** — no network, no account, no key needed
 - 🔎 Search + 10 categories, animated preview on hover
 - ⚡ **One click sends it** — no copy, no paste, no upload dialog
-- 🧩 Manifest V3, Shadow DOM, zero runtime dependencies beyond React
+- 🧩 Manifest V3, Shadow DOM, **no build step and no dependencies** — plain JS
 
 ---
 
 ## Install
 
-No store listing yet — load it from source:
+No store listing yet, and nothing to compile:
 
 ```bash
-git clone <your-fork-url> memestick
-cd memestick
-npm install
-npm run build
+git clone https://github.com/harshxterabits/memestick.git
 ```
 
 Then in Chrome / Edge / Brave:
@@ -38,9 +34,10 @@ Then in Chrome / Edge / Brave:
 1. Open `chrome://extensions`
 2. Turn on **Developer mode** (top right)
 3. Click **Load unpacked**
-4. Pick the **`dist/`** folder (not the repo root)
+4. Pick the **`memestick` folder** you just cloned
 
-That's it. No configuration required.
+That's it — no npm, no build, no configuration. Edit a file, hit the reload
+icon on the extension card, reload your tab.
 
 ---
 
@@ -93,7 +90,7 @@ Nothing is fetched at runtime, so the picker is instant and works offline.
 Needs Python 3 with Pillow:
 
 ```bash
-GIPHY_KEY=your_key npm run packs -- 100   # 100 per category; resumable
+GIPHY_KEY=your_key python3 scripts/fetch_packs.py 100   # 100 per category; resumable
 ```
 
 It downloads the still + animated rendition for each sticker, converts stills
@@ -124,8 +121,8 @@ document instead of a `MutationObserver`. Dynamically created fields and SPA
 navigation come free — a field nobody has focused or hovered needs no button.
 
 **Not breaking the host page.** The button and picker render into a Shadow DOM
-root, with Tailwind injected inside it. Page CSS can't reach in; our CSS can't
-leak out.
+root, with `styles.js` injected inside it. Page CSS can't reach in; our CSS
+can't leak out.
 
 **Getting the sticker into the editor.** Teams, Slack, Discord, WhatsApp Web and
 X all run model-driven editors (CKEditor, Quill, Slate, Lexical, Draft) that
@@ -143,43 +140,37 @@ area, then clicks the app's own Send button (a real user gesture beats a
 synthetic <kbd>Enter</kbd>), falling back to a synthetic <kbd>Enter</kbd> where
 there's no button. Success is verified by the image leaving the compose area.
 
-**Surviving MV3.** All `chrome.*` calls route through `src/ext.js`. When the
-extension reloads under an open tab, the orphaned content script removes its own
-UI instead of throwing `Extension context invalidated` on every hover.
+**Surviving MV3.** Every `chrome.*` call goes through a guard in `content.js`.
+When the extension reloads under an open tab, the orphaned content script
+removes its own UI instead of throwing `Extension context invalidated` on every
+hover.
 
 ---
 
 ## Project structure
 
 ```
-public/
-  manifest.json        MV3 manifest
-  background.js        service worker — all network calls + the GIPHY key
-  options.html/.js     paste your own GIPHY key
-  icons/               toolbar and store icons
-  stickers.json        the pack index (fetched lazily, not bundled into the JS)
-  stickers/            941 PNG + 941 GIF
-src/
-  content.jsx          Shadow-DOM React root, outside-click / Esc handling
-  ext.js               chrome.* wrapper with context-invalidation guard
-  insert.js            paste → upload → send pipeline
-  stickerService.js    the only module that knows where stickers come from
-  match.js             search predicate (pure, unit-tested)
-  hooks/
-    useInputDetector.js   which field are we decorating
-    useStickerSearch.js   debounced query + category
-  components/           StickerButton, StickerPicker, StickerSearch,
-                        StickerCategories, StickerGrid, StickerCard
+manifest.json      MV3 manifest
+styles.js          the picker's CSS (a template literal — a manifest-declared
+                   stylesheet lands in the page, which our Shadow DOM can't see)
+insert.js          paste → upload → send pipeline
+content.js         field tracking + the picker UI
+background.js      service worker: all network calls + the GIPHY key
+options.html/.js   paste your own GIPHY key
+icons/             toolbar and store icons
+stickers.json      the pack index, fetched on first open
+stickers/          941 PNG + 941 GIF
 scripts/
-  fetch_packs.py       download/refresh the packs
-  gen_icons.py         regenerate the extension icons
-  check.mjs            dataset + search sanity check
+  fetch_packs.py   download/refresh the packs
+  gen_icons.py     regenerate the extension icons
+  check.mjs        dataset sanity check
 ```
 
+The three content scripts load in that order and share one isolated world, so
+`styles.js` and `insert.js` just define globals that `content.js` uses.
+
 ```bash
-npm run build     # -> dist/
-npm run dev       # rebuild on change (still needs a reload in chrome://extensions)
-npm run check     # verifies every record has its files and search behaves
+node scripts/check.mjs    # every record has its files, ids are unique
 ```
 
 ---
@@ -201,13 +192,13 @@ open. Reload the tab.
 
 **Nothing happens when I click a sticker** — check the page console and the
 service worker console (`chrome://extensions` → MemeStick → **service
-worker**) for errors. The insertion path is `src/insert.js`: paste the file →
+worker**) for errors. The insertion path is `insert.js`: paste the file →
 wait for it to appear in the compose area → click the app's Send button.
 
 ## Contributing
 
 Issues and PRs welcome. Adding support for another chat app usually means one
-entry in `SEND_BUTTONS` in `src/insert.js` — please include the button's
+entry in `SEND_BUTTONS` in `insert.js` — please include the button's
 `outerHTML` in the PR.
 
 ## License

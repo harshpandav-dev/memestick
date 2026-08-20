@@ -1,6 +1,11 @@
 # Changelog
 
 ## Unreleased
+- **Dropped the build step.** React, Vite, Tailwind, npm and `dist/` are gone;
+  the repo folder is the extension. Same features in three plain content
+  scripts (`styles.js`, `insert.js`, `content.js`) sharing one isolated world.
+- Extension icons, a descriptive manifest name, and a toolbar click that opens
+  settings.
 - Paste the sticker file **alone**: CKEditor's ImageUploadEditing skips pasted
   files when the clipboard also carries `text/html`, so our own "helpful"
   text/html + text/plain entries were what silently killed the Teams upload.

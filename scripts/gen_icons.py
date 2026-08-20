@@ -3,7 +3,7 @@ import os
 from PIL import Image, ImageDraw, ImageFont
 
 FONT = "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf"
-OUT = os.path.join(os.path.dirname(__file__), "..", "public", "icons")
+OUT = os.path.join(os.path.dirname(__file__), "..", "icons")
 SIZES = (16, 32, 48, 128)
 BASE = 512
 

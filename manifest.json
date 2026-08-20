@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "MemeStick \u2014 Sticker Picker for Teams & Chat",
+  "name": "MemeStick — Sticker Picker for Teams & Chat",
   "version": "0.1.0",
   "description": "Adds a meme sticker picker to any text box. 941 stickers bundled, one click to send. Built for Microsoft Teams.",
   "permissions": [
@@ -16,6 +16,8 @@
         "<all_urls>"
       ],
       "js": [
+        "styles.js",
+        "insert.js",
         "content.js"
       ],
       "run_at": "document_idle",
@@ -49,7 +51,7 @@
     "128": "icons/icon128.png"
   },
   "action": {
-    "default_title": "MemeStick \u2014 click a text box to use, or open settings",
+    "default_title": "MemeStick — click a text box to use, or open settings",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",
