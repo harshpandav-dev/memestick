@@ -26,7 +26,7 @@ Discord, WhatsApp Web, Gmail, X and Reddit too.
 No store listing yet, and nothing to compile:
 
 ```bash
-git clone https://github.com/harshxterabits/memestick.git
+git clone https://github.com/harshpandav-dev/memestick.git
 ```
 
 Then in Chrome / Edge / Brave:
